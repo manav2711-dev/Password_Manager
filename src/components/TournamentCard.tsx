@@ -1,18 +1,10 @@
 
-import { getAttributeDetails, tournamentRegister } from "@/api/apis";
-import DescriptionModal from "@/components/DescriptionDialog";
 import { useDialog } from "@/context/DialogContext";
 import { useGlobalData } from "@/context/GlobalDataContext";
-import { formatDate } from "@/lib/date-utils";
 import { useNavigateToTournamentForm } from "@/lib/navigationutils";
-import { getPersonalDetails, saveItemAttributes } from "@/lib/storage";
-import { getCityById, getStatusInfo, isEvent, openInMaps } from "@/lib/utils";
-import { activityTypeMap } from "@/styles/gameMetaData";
-import { ItemAttributes } from "@/types/ItemAttributes";
-import { Tournament } from "@/types/Tournament";
-import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Passwords } from "@/types/passwords";
+import { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
 function getCountdown(startDate: Date): string {
@@ -28,14 +20,14 @@ function getCountdown(startDate: Date): string {
   return `${days}d : ${hours}h`;
 }
 
-export default function TournamentCard({ tournament }: { tournament: Tournament }) {
+export default function TournamentCard({ password }: { password: Passwords }) {
   const [cityName, setCityName] = useState("");
-  const countdown = getCountdown(tournament.start_date);
+  // const countdown = getCountdown(tournament.start_date);
   const navigateToForm = useNavigateToTournamentForm(); 
-  const registrationDate = tournament.reg_date ? new Date(tournament.reg_date) : new Date();
-  const activity = activityTypeMap[tournament.event_type];
+  // const registrationDate = tournament.reg_date ? new Date(tournament.reg_date) : new Date();
+  // const activity = activityTypeMap[tournament.event_type];
   const {registeredTournamentIds,markAsRegistered} = useGlobalData();
-  const isRegistered = Boolean(tournament.reg_date) || registeredTournamentIds.includes(tournament.id);
+  // const isRegistered = Boolean(tournament.reg_date) || registeredTournamentIds.includes(tournament.id);
   const [showDescription, setShowDescription] = useState(false);
    const [isSubmitting, setIsSubmitting] = useState(false);
    const { showConfirmDialog } = useDialog();
@@ -45,92 +37,92 @@ const handleDescriptionClose = () => setShowDescription(false);
 
 
   
-   const handleSubmit = async () => {
-      if(isEvent(tournament.event_type)){
-        handleEvent();
-      }else{
-        handleTournament();
-      }
-  };
+  //  const handleSubmit = async () => {
+  //     if(isEvent(tournament.event_type)){
+  //       handleEvent();
+  //     }else{
+  //       handleTournament();
+  //     }
+  // };
 
-   const handleEvent = async() =>{  //call to send event registration without form
-    const confirm = await showConfirmDialog("Are you sure you want to register?");
-    if(confirm){ 
-      setIsSubmitting(true);
-     try {
-        const person = await getPersonalDetails();
-        const attributes:ItemAttributes[] = [];
+  //  const handleEvent = async() =>{  //call to send event registration without form
+  //   const confirm = await showConfirmDialog("Are you sure you want to register?");
+  //   if(confirm){ 
+  //     setIsSubmitting(true);
+  //    try {
+  //       const person = await getPersonalDetails();
+  //       const attributes:ItemAttributes[] = [];
     
-        const res = await tournamentRegister(
-          tournament.id,
-          tournament.event_type,
-          person!.id,
-          attributes,
-        );
-        console.log("Registration success:", res);
-        markAsRegistered(tournament.id);
-        Alert.alert("Success", "Registered Event Successfully!");
-        // router.replace(Route.TOURNAMENT);
-      } catch (error) {
-        console.error("Error submitting registration:", error);
-        Alert.alert("Error", "Failed to submit registration.");
-      }finally{
-        setIsSubmitting(false);
-      }
-    }
-   }
+  //       const res = await tournamentRegister(
+  //         tournament.id,
+  //         tournament.event_type,
+  //         person!.id,
+  //         attributes,
+  //       );
+  //       console.log("Registration success:", res);
+  //       markAsRegistered(tournament.id);
+  //       Alert.alert("Success", "Registered Event Successfully!");
+  //       // router.replace(Route.TOURNAMENT);
+  //     } catch (error) {
+  //       console.error("Error submitting registration:", error);
+  //       Alert.alert("Error", "Failed to submit registration.");
+  //     }finally{
+  //       setIsSubmitting(false);
+  //     }
+  //   }
+  //  }
 
-   const handleTournament = async() =>{ 
-    if(isSubmitting) return;
-    setIsSubmitting(true); // call to send tournament registration with form
-    try{
-     const res = await getAttributeDetails(
-      tournament.event_type,
-      );
-      if(!res || res.length===0){
-        Alert.alert("OOPS! Form Not Found", "Try after sometime.");
-        return;
-      }
-      saveItemAttributes(res);
-      console.log("Attribute success:", res);
-        navigateToForm(tournament)
-    } catch (error) {
-      console.error("Error submitting registration:", error);
-      Alert.alert("Error", "Failed to submit registration.");
-    }
-    finally{
-      setIsSubmitting(false);
-    }
-   }
+  //  const handleTournament = async() =>{ 
+  //   if(isSubmitting) return;
+  //   setIsSubmitting(true); // call to send tournament registration with form
+  //   try{
+  //    const res = await getAttributeDetails(
+  //     tournament.event_type,
+  //     );
+  //     if(!res || res.length===0){
+  //       Alert.alert("OOPS! Form Not Found", "Try after sometime.");
+  //       return;
+  //     }
+  //     saveItemAttributes(res);
+  //     console.log("Attribute success:", res);
+  //       navigateToForm(tournament)
+  //   } catch (error) {
+  //     console.error("Error submitting registration:", error);
+  //     Alert.alert("Error", "Failed to submit registration.");
+  //   }
+  //   finally{
+  //     setIsSubmitting(false);
+  //   }
+  //  }
   
-  useEffect(() => {
-    const fetchCityName = async () => {
-      const city = await getCityById(tournament.city_id);
-      setCityName(city.name);
-    };
-    fetchCityName();
-  }, [tournament.city_id]);
+  // useEffect(() => {
+  //   const fetchCityName = async () => {
+  //     const city = await getCityById(tournament.city_id);
+  //     setCityName(city.name);
+  //   };
+  //   fetchCityName();
+  // }, [tournament.city_id]);
 
   return (
     <View style={styles.cardWrapper}>
-      <View style={[styles.cardHeader, { backgroundColor: activity?.color || "#333" }]}>
+      <View style={[styles.cardHeader, { backgroundColor: "#333" }]}>
     
     {/* Activity on the left */}
-    {activity && (
+    {/* {activity && (
       <View style={styles.leftSection}>
         <Text style={styles.activityIcon}>{activity.icon}</Text>
         <Text style={styles.activityName}>{activity.name}</Text>
       </View>
-    )}
+    )} */}
 
     {/* Centered Tournament Name */}
     <View style={styles.centerSection}>
-      <Text style={styles.headerText}>{tournament.name}</Text>
+      <Text style={styles.headerText}>{password.name}</Text>
     </View>
 
-    <TouchableOpacity onPress={() => openInMaps(tournament.latitude, tournament.longitude)} style={styles.mapButton}>
+    {/* <TouchableOpacity onPress={() => openInMaps(tournament.latitude, tournament.longitude)} style={styles.mapButton}>
     <Ionicons name="location-sharp" size={24} color="#d9534f" />
-</TouchableOpacity>
+</TouchableOpacity> */}
 
      {/* Right Section: Info Button */}
   <TouchableOpacity onPress={handleDescriptionOpen} style={styles.infoButton}>
@@ -142,20 +134,20 @@ const handleDescriptionClose = () => setShowDescription(false);
 
       <View style={styles.cardBody}>
         <View style={{ flex: 1 }}>
-          {activity && (
+          {/* {activity && (
             <View style={styles.activityRow}>
-              {/* <Text style={styles.activityIcon}>{activity.icon}</Text> */}
-              {/* <Text style={styles.activityName}>{activity.name}</Text> */}
+              <Text style={styles.activityIcon}>{activity.icon}</Text>
+              <Text style={styles.activityName}>{activity.name}</Text>
             </View>
-          )}
-          <Text style={styles.subText}>📍 City: {cityName}</Text>
-          <Text style={styles.subText}>
+          )} */}
+          <Text style={styles.subText}>📍 Id: {password._id}</Text>
+          {/* <Text style={styles.subText}>
             🗓 {formatDate(tournament.start_date)} -{" "}
             {formatDate(tournament.end_date)}
-          </Text>
+          </Text> */}
           
 
-    {isRegistered && (() => {
+    {/* {isRegistered && (() => {
   const { text, color } = getStatusInfo(tournament.reg_status);
   const iconName = "checkmark-circle"; // use different icons if needed
   return (
@@ -166,14 +158,14 @@ const handleDescriptionClose = () => setShowDescription(false);
       </Text>
     </View>
   );
-})()}
+})()} */}
 
   </View>
 
         <View style={styles.rightBox}>
-          <Text style={styles.countdownText}>⏳ {countdown}</Text>
+          {/* <Text style={styles.countdownText}>⏳ {countdown}</Text> */}
 
-   <TouchableOpacity
+   {/* <TouchableOpacity
   onPress={handleSubmit}
   disabled={isRegistered || isSubmitting}
   style={[
@@ -194,16 +186,16 @@ const handleDescriptionClose = () => setShowDescription(false);
       {isRegistered ? "Registered" : "Register"}
     </Text>
   )}
-</TouchableOpacity>
+</TouchableOpacity> */}
 
         </View>
       </View>
 
-      <DescriptionModal
+      {/* <DescriptionModal
   visible={showDescription}
   onClose={handleDescriptionClose}
   // description="" 
-  description={tournament.type_remarks}/>
+  description={tournament.type_remarks}/> */}
     </View>  
   );
 }

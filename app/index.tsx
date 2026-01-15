@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import RegisterScreen from "./screens/register";
+import LoginScreen from "./screens/login";
 // Keep splash screen visible
 SplashScreen.preventAutoHideAsync();
 
@@ -48,7 +48,8 @@ export default function Index() {
 
   if (mobileToken === null) {
     // user is not registered because there is no token store in storage
-    return (<RegisterScreen />);
+    // return (<RegisterScreen />);
+    return (<LoginScreen/>)
   }
 
   // if (typeof mobileToken == 'string') {

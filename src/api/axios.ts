@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.1.12:4000/"; // Local Server 
+const API_BASE_URL = "http://192.168.1.7:4000/"; // Local Server 
 // const API_BASE_URL = "https://web.accountsdeck.com/"; // Production Server
 
 const api = axios.create({

@@ -46,6 +46,14 @@ export const login = async (username: string, password: string) => {   // api ca
   return response.data;
 };
 
+export const getPasswords = async (userId: string) => {   // api call for login
+  const response = await api.post(`auth/mob/getPasswords`, {
+    userId:userId,
+  });
+   console.log("passwords response",response.data)
+  return response.data;
+};
+
 export const getPersonDetail = async (mobile: string) => {   //api call to get personal details
   console.log("Calling API: api/sports/personalDetail", { mobile });
   const response = await api.post("api/sports/personalDetail", null, {

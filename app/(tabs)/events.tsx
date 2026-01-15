@@ -1,46 +1,44 @@
-import { getTournaments } from "@/api/apis";
+import { getPasswords } from "@/api/apis";
 import TournamentCard from "@/components/TournamentCard"; // Create this component
 import { useGlobalData } from "@/context/GlobalDataContext";
-import { getTournamentDetails, saveTournamentDetails } from "@/lib/storage";
-import { isEvent } from "@/lib/utils";
-import { activityTypeMap } from "@/styles/gameMetaData";
-import { Tournament } from "@/types/Tournament";
+import { Passwords } from "@/types/passwords";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function TournamentListScreen() {
-  const [events, setEvents] = useState<Tournament[] | null>(null);
+  const [passwords, setPasswords] = useState<Passwords[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true); 
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {searchQuery } = useGlobalData();
+  const userId = "695bf338dfd98afe1b2dcc18"
 
-    const filteredEvents = events?.filter((e) => {
-      const nameMatch = e.name?.toLowerCase().includes(searchQuery.toLowerCase());
-      const eventTypeName = activityTypeMap[e.event_type]?.name?.toLowerCase() || "";
-      const typeMatch = eventTypeName.includes(searchQuery.toLowerCase());
+    // const filteredEvents = events?.filter((e) => {
+    //   const nameMatch = e.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    //   const eventTypeName = activityTypeMap[e.event_type]?.name?.toLowerCase() || "";
+    //   const typeMatch = eventTypeName.includes(searchQuery.toLowerCase());
     
-      return nameMatch || typeMatch;
-    });
+    //   return nameMatch || typeMatch;
+    // });
     
     const fetchEvents = async (Refresh=false) => {
     try {
-      let res:Tournament[];
+      let res:Passwords[];
       if(!Refresh){
-        const savedData: Tournament[]|null = await getTournamentDetails();
-        if(savedData && savedData.length>0){
-          res =savedData;
-        }else{
-         res = await getTournaments(); 
-          await saveTournamentDetails(res);//make api call for tournaments
-        }
+        // const savedData: Passwords[]|null = await getTournamentDetails();
+        // if(savedData && savedData.length>0){
+        //   res =savedData;
+        // }else{
+         res = await getPasswords(userId); 
+          // await saveTournamentDetails(res);//make api call for tournaments
+        // }
       }else{
-        res= await getTournaments();
-        await saveTournamentDetails(res);
+        res= await getPasswords(userId);
+        // await saveTournamentDetails(res);
       }
-      setEvents((res as Tournament[]).filter((e) => isEvent(e.event_type))); // filter the list if it is a event or tournament
+      setPasswords((res as Passwords[])); // filter the list if it is a event or tournament
     } catch (err) {
-      console.log("Error fetching Events:", err);
+      console.log("Error fetching Passwords:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -61,11 +59,11 @@ export default function TournamentListScreen() {
     <View style={{ padding: 16, flex: 1, justifyContent: "center" }}>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
-      ) : events && events.length > 0 ? (
+      ) : passwords && passwords.length > 0 ? (
         <FlatList
-          data={filteredEvents}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <TournamentCard tournament={item} />}  //tournament card
+          data={passwords}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => <TournamentCard password={item} />}  //tournament card
            refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
