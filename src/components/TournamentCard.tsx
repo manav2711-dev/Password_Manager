@@ -72,20 +72,19 @@ export default function TournamentCard({ password}: { password: Passwords}) {
   };
 
   
-  const handleCopy = async () => {
-    if (!visible) {
-      Alert.alert("Hidden Password", "Reveal password before copying");
-      return;
-    }
+ const handleCopy = async () => {
+  if (!visible) {
+    Alert.alert("Hidden Password", "Reveal password before copying");
+    return;
+  }
 
-    await Clipboard.setStringAsync(decrypted);
-    Alert.alert("Copied", "Password copied to clipboard");
+  await Clipboard.setStringAsync(decrypted);
+  Alert.alert("Copied", "Password copied to clipboard");
 
-    // Auto-clear clipboard after 20 seconds (security)
-    setTimeout(() => {
-      Clipboard.setStringAsync("");
-    }, 20000);
-  };
+  setTimeout(() => {
+    Clipboard.setStringAsync("");
+  }, 20000);
+};
 
  return (
     <LinearGradient
@@ -100,11 +99,11 @@ export default function TournamentCard({ password}: { password: Passwords}) {
 
        <View style={styles.iconRow}>
           {/* Copy */}
-          <TouchableOpacity onPress={handleCopy} disabled={visible}>
+          <TouchableOpacity onPress={handleCopy}>
             <Ionicons
               name="copy-outline"
               size={20}
-              color={"#e5e7eb"}
+              color="#e5e7eb" // visual disabled state
             />
           </TouchableOpacity>
 
@@ -120,15 +119,15 @@ export default function TournamentCard({ password}: { password: Passwords}) {
       </View>
 
       {/* Username */}
-      {/* <Text style={styles.label}>Username</Text>
-      <Text style={styles.value}>{password.username}</Text> */}
+      {/* <Text style={styles.label}>Username</Text> */}
+      <Text style={styles.value}>{password.username}</Text>
 
       {/* Password */}
-      <Text style={[styles.label, { marginTop: 10 }]}>Password</Text>
+      {/* <Text style={[styles.label, { marginTop: 10 }]}>Password</Text> */}
       <Text style={styles.password}>{decrypted}</Text>
 
       {/* Footer */}
-      <Text style={styles.id}>ID: {password._id}</Text>
+      <Text style={styles.id}>Desc: {password.description}</Text>
     </LinearGradient>
   );
 }
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
   },
 
   id: {
-    marginTop: 12,
+    marginTop: 8,
     fontSize: 11,
     color: "#d0d5de",
   },

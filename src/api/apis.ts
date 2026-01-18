@@ -57,6 +57,15 @@ export const getPasswords = async (userId: string) => {
   }   // api call for login
 };
 
+export const encryptPassword = async (passData: any,userId:string) => {   // api call for login
+  const response = await api.post(`auth/mob/encrypt`, {
+    passData:passData,
+    userId:userId,
+  });
+   console.log("encrypt passwords response",response.data)
+  return response.data;
+};
+
 
 export const decryptPassword = async (passId: string) => {   // api call for login
   const response = await api.post(`auth/mob/decrypt`, {
