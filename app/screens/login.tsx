@@ -5,6 +5,7 @@ import Theme from "@/constants/theme";
 import { useDialog } from "@/context/DialogContext";
 import {
   saveMobileToken,
+  saveUserDetails,
   secureStorageLogs,
   secureStorageSetItem
 } from "@/lib/storage";
@@ -41,7 +42,7 @@ export default function LoginScreen() {
         })
         return;
       }
-      // saveSession(res);
+      saveUserDetails(res.user)
       saveMobileToken(res.accessToken);
       secureStorageSetItem(SECURE_STORE_KEYS.USERNAME, username)
       router.replace(Route.PASSWORDS);

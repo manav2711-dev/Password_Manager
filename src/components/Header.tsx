@@ -32,6 +32,12 @@ export const CustomHeader = () => {
   };
 
   return (
+    //  <LinearGradient
+    //       colors={["#283542", "#255fdb"]}
+    //       start={{ x: 0, y: 0 }}
+    //       end={{ x: 1, y: 1 }}
+    //       style={styles.container}
+    //     >
     <View style={styles.container}>
       {isSearching && isSearchableTab ? (
         <View style={styles.searchContainer}>
@@ -65,6 +71,7 @@ export const CustomHeader = () => {
         </View>
       )}
     </View>
+    // </LinearGradient>
   );
 };
 
@@ -73,6 +80,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     paddingHorizontal: 16,
+    alignItems:"center",
     paddingTop: 50,
     paddingBottom:16,
     backgroundColor: Theme.colors.primary,

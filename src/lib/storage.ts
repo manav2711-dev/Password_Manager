@@ -83,14 +83,9 @@ export const savePhoneNo = async (phoneNo: string) => {
   secureStorageSetItem(SECURE_STORE_KEYS.PHONE_NO, phoneNo);
 };
 
-// export const savePersonalDetails = async (personal_detail: PersonalDetail) => {
-//    const city = await getCityById(personal_detail.city_id); //save personal details with the city name
-//   const updatedDetails: PersonalDetail = {
-//     ...personal_detail,
-//     city: city,
-//   };
-//   await secureStorageSetItem(SECURE_STORE_KEYS.PERSONAL_DETAIL, updatedDetails);
-// };
+export const saveUserDetails = async (user_detail: any) => {
+  await secureStorageSetItem(SECURE_STORE_KEYS.USER_DETAIL, user_detail);
+};
 
 export const saveTournamentDetails = async (tournaments: Tournament[]) => {
   const enrichedTournaments: Tournament[] = [];
@@ -125,8 +120,8 @@ export const getPhoneNo = async (): Promise<string | null> => {
   return await secureStorageGetItem(SECURE_STORE_KEYS.PHONE_NO);
 };
 
-export const getPersonalDetails = async (): Promise<PersonalDetail | null> => {
-  return await secureStorageGetItem(SECURE_STORE_KEYS.PERSONAL_DETAIL);
+export const getUserDetails = async (): Promise<any | null> => {
+  return await secureStorageGetItem(SECURE_STORE_KEYS.USER_DETAIL);
 };
 
 export const getTournamentDetails = async (): Promise<Tournament[] | null> => {

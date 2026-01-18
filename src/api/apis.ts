@@ -1,5 +1,4 @@
 import {
-  getPersonalDetails,
   getPhoneNo
 } from "@/lib/storage";
 import { ItemAttributes } from "@/types/ItemAttributes";
@@ -46,9 +45,22 @@ export const login = async (username: string, password: string) => {   // api ca
   return response.data;
 };
 
-export const getPasswords = async (userId: string) => {   // api call for login
-  const response = await api.post(`auth/mob/getPasswords`, {
+export const getPasswords = async (userId: string) => {
+  try {
+     const response = await api.post(`auth/mob/getPasswords`, {
     userId:userId,
+  });
+   console.log("passwords response",response.data)
+  return response.data;
+  } catch (error) {
+    console.log("error",error)
+  }   // api call for login
+};
+
+
+export const decryptPassword = async (passId: string) => {   // api call for login
+  const response = await api.post(`auth/mob/decrypt`, {
+    passId:passId,
   });
    console.log("passwords response",response.data)
   return response.data;
@@ -81,18 +93,18 @@ export const registerPersonalDetail = async (detail: PersonalDetail) => {   //ap
   return response.data;
 };
 
-export const getTournaments = async () => {    //api call to get tournaments 
-      const detail = await getPersonalDetails();
-  console.log("Calling API: api/sports/Tournaments", { detail});
-  const response = await api.get("api/sports/tournaments",{
-    params: {
-      person:detail?.id
-    }
-  }
-  );
-  console.log("Response from API:", response.data);
-  return response.data;
-};
+// export const getTournaments = async () => {    //api call to get tournaments 
+//       const detail = await getPersonalDetails();
+//   console.log("Calling API: api/sports/Tournaments", { detail});
+//   const response = await api.get("api/sports/tournaments",{
+//     params: {
+//       person:detail?.id
+//     }
+//   }
+//   );
+//   console.log("Response from API:", response.data);
+//   return response.data;
+// };
 
 // export const sendImage = async (formData: FormData) => {  //api call to send image
 //   console.log("Calling API: api/sports/Tournaments", formData);

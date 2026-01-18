@@ -1,5 +1,10 @@
 const Colors = {
-  primary: "#1976D2",
+  primary: "#1e4eb8",
+    primaryGradient: {
+    colors: ["#283542", "#255fdb"],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
   secondary: "#ff9500",
   background: "#ffffff",
   surface: "#f7f7f7",

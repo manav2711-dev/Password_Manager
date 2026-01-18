@@ -15,6 +15,7 @@
 // }
 
 
+import Theme from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
 import { Pressable } from "react-native";
@@ -27,7 +28,7 @@ export default function ScreensLayout() {
         headerTitle: "Passico",
         headerTitleAlign: "center",
          headerBackVisible: false,
-          headerStyle: { backgroundColor: "#1976D2" }, 
+          headerStyle: { backgroundColor: Theme.colors.primary }, 
             headerTitleStyle: { fontWeight: "bold", color:"white" },
         // 👇 Only show custom back if opened from a tab
         headerLeft: (props) => {

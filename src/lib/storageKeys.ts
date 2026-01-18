@@ -7,7 +7,7 @@ export const SECURE_STORE_KEYS = {
   REFRESH_EXPIRE: "refreshExpire",
   REFRESH_TOKEN: "refreshToken",
   SESSION_TOKEN: "session_Token", // token
-  PERSONAL_DETAIL: "personal_detail", //personal details
+  USER_DETAIL: "user_detail", //personal details
   CITIES_DETAIL:"cities_detail", //city details
   TOURNAMENT_DETAIL:"tournament_detail", //tournament details
   ITEM_ATTRIBUTES:"item_attributes",

@@ -1,11 +1,14 @@
-
+import { decryptPassword } from "@/api/apis";
+import { Route } from "@/constants/router";
 import { useDialog } from "@/context/DialogContext";
-import { useGlobalData } from "@/context/GlobalDataContext";
 import { useNavigateToTournamentForm } from "@/lib/navigationutils";
-import { Passwords } from "@/types/passwords";
+import { Passwords } from "@/types/Passwords";
+import { Ionicons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function getCountdown(startDate: Date): string {
   const now = new Date();
@@ -20,299 +23,169 @@ function getCountdown(startDate: Date): string {
   return `${days}d : ${hours}h`;
 }
 
-export default function TournamentCard({ password }: { password: Passwords }) {
-  const [cityName, setCityName] = useState("");
-  // const countdown = getCountdown(tournament.start_date);
+export default function TournamentCard({ password}: { password: Passwords}) {
   const navigateToForm = useNavigateToTournamentForm(); 
-  // const registrationDate = tournament.reg_date ? new Date(tournament.reg_date) : new Date();
-  // const activity = activityTypeMap[tournament.event_type];
-  const {registeredTournamentIds,markAsRegistered} = useGlobalData();
-  // const isRegistered = Boolean(tournament.reg_date) || registeredTournamentIds.includes(tournament.id);
   const [showDescription, setShowDescription] = useState(false);
-   const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
    const { showConfirmDialog } = useDialog();
+   const [visible, setVisible] = useState(false);
+  const [decrypted, setDecrypted] = useState<string>("••••••••");
+
+   const handleEvent = async() =>{
+     try {
+        const res = await decryptPassword(password._id);
+        return res
+      } catch (error : any) {
+        console.error("Error submitting passowrd:", error);
+          if (error?.response?.status === 401) {
+          Alert.alert(
+            "Session Expired",
+            error?.response?.data?.message || "Something went wrong"
+          );
+           router.replace(Route.LOGIN);
+        } else {
+        Alert.alert(
+        "Error",
+        error?.response?.data?.message || "Something went wrong"
+    );
+    router.replace(Route.LOGIN);
+  }
+  // throw error;
+      }
+   }
+
+    const handleToggle = async () => {
+      try {
+        setLoading(true);
+         if (!visible) {
+      const plain = await handleEvent();
+      setDecrypted(plain);
+    } else {
+      setDecrypted("••••••••");
+    }
+    setVisible(!visible);
+      } catch {
+      Alert.alert("Error", "Failed to decrypt password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   
-const handleDescriptionOpen = () => setShowDescription(true);
-const handleDescriptionClose = () => setShowDescription(false);
+  const handleCopy = async () => {
+    if (!visible) {
+      Alert.alert("Hidden Password", "Reveal password before copying");
+      return;
+    }
 
+    await Clipboard.setStringAsync(decrypted);
+    Alert.alert("Copied", "Password copied to clipboard");
 
-  
-  //  const handleSubmit = async () => {
-  //     if(isEvent(tournament.event_type)){
-  //       handleEvent();
-  //     }else{
-  //       handleTournament();
-  //     }
-  // };
+    // Auto-clear clipboard after 20 seconds (security)
+    setTimeout(() => {
+      Clipboard.setStringAsync("");
+    }, 20000);
+  };
 
-  //  const handleEvent = async() =>{  //call to send event registration without form
-  //   const confirm = await showConfirmDialog("Are you sure you want to register?");
-  //   if(confirm){ 
-  //     setIsSubmitting(true);
-  //    try {
-  //       const person = await getPersonalDetails();
-  //       const attributes:ItemAttributes[] = [];
-    
-  //       const res = await tournamentRegister(
-  //         tournament.id,
-  //         tournament.event_type,
-  //         person!.id,
-  //         attributes,
-  //       );
-  //       console.log("Registration success:", res);
-  //       markAsRegistered(tournament.id);
-  //       Alert.alert("Success", "Registered Event Successfully!");
-  //       // router.replace(Route.TOURNAMENT);
-  //     } catch (error) {
-  //       console.error("Error submitting registration:", error);
-  //       Alert.alert("Error", "Failed to submit registration.");
-  //     }finally{
-  //       setIsSubmitting(false);
-  //     }
-  //   }
-  //  }
+ return (
+    <LinearGradient
+      colors={["#283542", "#255fdb"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.card}
+    >
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.appName}>{password.name}</Text>
 
-  //  const handleTournament = async() =>{ 
-  //   if(isSubmitting) return;
-  //   setIsSubmitting(true); // call to send tournament registration with form
-  //   try{
-  //    const res = await getAttributeDetails(
-  //     tournament.event_type,
-  //     );
-  //     if(!res || res.length===0){
-  //       Alert.alert("OOPS! Form Not Found", "Try after sometime.");
-  //       return;
-  //     }
-  //     saveItemAttributes(res);
-  //     console.log("Attribute success:", res);
-  //       navigateToForm(tournament)
-  //   } catch (error) {
-  //     console.error("Error submitting registration:", error);
-  //     Alert.alert("Error", "Failed to submit registration.");
-  //   }
-  //   finally{
-  //     setIsSubmitting(false);
-  //   }
-  //  }
-  
-  // useEffect(() => {
-  //   const fetchCityName = async () => {
-  //     const city = await getCityById(tournament.city_id);
-  //     setCityName(city.name);
-  //   };
-  //   fetchCityName();
-  // }, [tournament.city_id]);
+       <View style={styles.iconRow}>
+          {/* Copy */}
+          <TouchableOpacity onPress={handleCopy} disabled={visible}>
+            <Ionicons
+              name="copy-outline"
+              size={20}
+              color={"#e5e7eb"}
+            />
+          </TouchableOpacity>
 
-  return (
-    <View style={styles.cardWrapper}>
-      <View style={[styles.cardHeader, { backgroundColor: "#333" }]}>
-    
-    {/* Activity on the left */}
-    {/* {activity && (
-      <View style={styles.leftSection}>
-        <Text style={styles.activityIcon}>{activity.icon}</Text>
-        <Text style={styles.activityName}>{activity.name}</Text>
-      </View>
-    )} */}
-
-    {/* Centered Tournament Name */}
-    <View style={styles.centerSection}>
-      <Text style={styles.headerText}>{password.name}</Text>
-    </View>
-
-    {/* <TouchableOpacity onPress={() => openInMaps(tournament.latitude, tournament.longitude)} style={styles.mapButton}>
-    <Ionicons name="location-sharp" size={24} color="#d9534f" />
-</TouchableOpacity> */}
-
-     {/* Right Section: Info Button */}
-  <TouchableOpacity onPress={handleDescriptionOpen} style={styles.infoButton}>
-    <Text style={styles.infoIcon}>ℹ️</Text>
-  </TouchableOpacity>
-    
-  </View>
-
-
-      <View style={styles.cardBody}>
-        <View style={{ flex: 1 }}>
-          {/* {activity && (
-            <View style={styles.activityRow}>
-              <Text style={styles.activityIcon}>{activity.icon}</Text>
-              <Text style={styles.activityName}>{activity.name}</Text>
-            </View>
-          )} */}
-          <Text style={styles.subText}>📍 Id: {password._id}</Text>
-          {/* <Text style={styles.subText}>
-            🗓 {formatDate(tournament.start_date)} -{" "}
-            {formatDate(tournament.end_date)}
-          </Text> */}
-          
-
-    {/* {isRegistered && (() => {
-  const { text, color } = getStatusInfo(tournament.reg_status);
-  const iconName = "checkmark-circle"; // use different icons if needed
-  return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <Ionicons name={iconName} size={18} color={color} style={{ marginRight: 4 }} />
-      <Text style={styles.subText}>
-        Registered on:{formatDate(registrationDate)} (Status:{text})
-      </Text>
-    </View>
-  );
-})()} */}
-
-  </View>
-
-        <View style={styles.rightBox}>
-          {/* <Text style={styles.countdownText}>⏳ {countdown}</Text> */}
-
-   {/* <TouchableOpacity
-  onPress={handleSubmit}
-  disabled={isRegistered || isSubmitting}
-  style={[
-    styles.registerButton,
-    {
-      backgroundColor: isRegistered ? "#ccc" : activity?.color || "#2e86de",
-      opacity: isRegistered ? 1 : 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  ]}
->
-  {isSubmitting ? (
-    <ActivityIndicator size="small" color="#fff" />
-  ) : (
-    <Text style={styles.registerButtonText}>
-      {isRegistered ? "Registered" : "Register"}
-    </Text>
-  )}
-</TouchableOpacity> */}
-
+          {/* Eye */}
+          <TouchableOpacity onPress={handleToggle} style={{ marginLeft: 14 }}>
+            <Ionicons
+              name={visible ? "eye-off-outline" : "eye-outline"}
+              size={22}
+              color="#e5e7eb"
+            />
+          </TouchableOpacity>
         </View>
       </View>
 
-      {/* <DescriptionModal
-  visible={showDescription}
-  onClose={handleDescriptionClose}
-  // description="" 
-  description={tournament.type_remarks}/> */}
-    </View>  
+      {/* Username */}
+      {/* <Text style={styles.label}>Username</Text>
+      <Text style={styles.value}>{password.username}</Text> */}
+
+      {/* Password */}
+      <Text style={[styles.label, { marginTop: 10 }]}>Password</Text>
+      <Text style={styles.password}>{decrypted}</Text>
+
+      {/* Footer */}
+      <Text style={styles.id}>ID: {password._id}</Text>
+    </LinearGradient>
   );
 }
 
-// export const getString=(des:string):string=>{
-//   let str = "";
-// for (let index = 0; index < 250; index++) {
-//   str+=des;
-// }
-// return str;
-// }
-
 const styles = StyleSheet.create({
-  cardWrapper: {
-    borderRadius: 16,
-    marginVertical: 12,
-    backgroundColor: "#f8f9fa",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 3,
-    overflow: "hidden",
-  },
-  cardBody: {
-    flexDirection: "row",
+  card: {
+    borderRadius: 18,
     padding: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
   },
-  activityRow: {
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  appName: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#f9fafb",
+  },
+
+  label: {
+    fontSize: 12,
+    color: "#d0d5de",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+  },
+   iconRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+    color: "#d0d5de",
   },
-  subText: {
+
+  value: {
     fontSize: 14,
-    color: "#555",
-    marginBottom: 4,
+    color: "#d0d5de",
+    marginTop: 2,
   },
-  rightBox: {
-    justifyContent: "center",
-    alignItems: "flex-end",
-    marginLeft: 16,
-  },
-  countdownText: {
+
+  password: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#d9534f",
-    marginBottom: 8,
+    color: "#d0d5de",
+    fontWeight: "500",
+    letterSpacing: 1,
+    marginTop: 2,
   },
-  registerButton: {
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-  borderRadius: 8,
-  marginTop: 6,
-  alignItems: "center",
-},
-registerButtonText: {
-  color: "#fff",
-  fontSize: 14,
-  fontWeight: "600",
-},
 
-activityIcon: {
-  marginRight: 4,
-  fontSize: 20,
-},
-
-activityName: {
-  color: '#fff',
-  fontSize: 16,
-  fontWeight:'bold',
-},
-
-headerText: {
-  color: '#fff',
-  fontSize: 20,
-  fontWeight: 'bold',
-},
-
-infoIcon: {
-  fontSize: 18,
-  color: '#fff',
-},
-
-
-cardHeader: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingHorizontal: 10,
-  minHeight: 50,
-  // flexWrap: 'wrap',
-  backgroundColor: '#333', // fallback if no activity.color
-},
-
-leftSection: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  flexShrink: 1,
-},
-
-centerSection: {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  // paddingHorizontal: 5,
-},
-
-mapButton: {
-  padding: 2,
-  // marginRight: 2,
-},
-
-infoButton: {
-  padding: 6,
-},
-
-
+  id: {
+    marginTop: 12,
+    fontSize: 11,
+    color: "#d0d5de",
+  },
 });
