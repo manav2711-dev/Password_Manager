@@ -4,9 +4,9 @@ export class Route {
     static REGISTER: Href = "/screens/register";
     static LOGIN: Href = "/screens/login";
     static PROFILE :Href = "/(tabs)/profile";
-    static TOURNAMENT: Href = "/tournament";
+    // static TOURNAMENT: Href = "/tournament";
     // static DETAILS: Href = "/screens/details";
-     static PASSWORDS: Href = "/(tabs)/events";
+     static PASSWORDS: Href = "/(tabs)/passwords";
     //  static HOSPITALS: Href= "/screens/hospitals";
     //  static PATIENT_FORM : Href="/screens/patientDetails";
     //  static DIAGNOSE_DETAILS:Href="/screens/diagnoseDetail";

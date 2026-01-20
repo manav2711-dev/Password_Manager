@@ -6,7 +6,6 @@ import { useDialog } from "@/context/DialogContext";
 import {
   saveMobileToken,
   saveUserDetails,
-  secureStorageLogs,
   secureStorageSetItem
 } from "@/lib/storage";
 import { SECURE_STORE_KEYS } from "@/lib/storageKeys";
@@ -99,14 +98,14 @@ export default function LoginScreen() {
           Login
         </Button>
 
-        <Button
+        {/* <Button
           mode="contained"
           onPress={secureStorageLogs}
           style={styles.button}
           disabled={isSubmitting}
           contentStyle={{ paddingVertical: 6 }}>
           Print Logs
-        </Button>
+        </Button> */}
       </View>
     </KeyboardAvoidingView>
   );

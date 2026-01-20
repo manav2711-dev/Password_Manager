@@ -81,12 +81,12 @@ export default function TabLayout() {
         /> */}
          
             <Tabs.Screen
-          name="events"
+          name="passwords"
           options={{
-            title: "Events",
+            title: "Passwords",
             tabBarIcon: ({ color, size }) => (
               <Ionicons
-                name={Theme.icons.event}
+                name={Theme.icons.pass}
                 size={size}
                 color={color}
               />

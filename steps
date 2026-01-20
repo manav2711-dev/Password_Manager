@@ -1,0 +1,15 @@
+1. npm install -g eas-cli
+2. Set-ExecutionPolicy RemoteSigned -Scope CurrentUser //run this command in powershell and press Y
+2.create account for expo
+4.eas login
+5.eas build:configure
+3. eas build -p android --profile production
+4. eas build -p ios --profile production
+
+
+
+java -jar bundletool.jar build-apks --bundle="app.aab" --output="myapp.apks"
+
+
+java -jar bundletool.jar build-apks --bundle=app.aab --output=myapp.apks --mode=universal
+

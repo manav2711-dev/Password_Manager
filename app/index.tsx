@@ -32,7 +32,7 @@ export default function Index() {
 
   useEffect(() => {
     if (typeof mobileToken === "string") {
-      router.replace(Route.PROFILE); //if token is present route to tournament page
+      router.replace(Route.PASSWORDS); //if token is present route to tournament page
     }
   }, [mobileToken]);
 
