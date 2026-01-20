@@ -217,6 +217,17 @@ const handleChange = (key: string, value: any) => {
           {/* {showOtp ? "Verify OTP" : "Register"} */}
           {"Register"}
         </Button>
+
+        <Button
+          mode="contained"
+          // onPress={showOtp ? handleVerifyOtp : handleRegister}
+          onPress={()=> router.replace(Route.LOGIN)}
+          style={styles.button}
+          disabled={isSubmitting}
+          contentStyle={{ paddingVertical: 6 }}>
+          {/* {showOtp ? "Verify OTP" : "Register"} */}
+          Login
+        </Button>
         {/* { showOtp?
         <Button
           mode="contained"

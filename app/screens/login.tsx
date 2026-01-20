@@ -98,6 +98,15 @@ export default function LoginScreen() {
           Login
         </Button>
 
+        <Button
+          mode="contained"
+          onPress={() =>router.replace(Route.REGISTER)}
+          style={styles.button}
+          disabled={isSubmitting}
+          contentStyle={{ paddingVertical: 6 }}>
+          Register
+        </Button>
+
         {/* <Button
           mode="contained"
           onPress={secureStorageLogs}
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: Theme.typography.small,
     color: Theme.colors.muted,
     textAlign: "center",
-    marginBottom: Theme.spacing.xl + Theme.spacing.xl,
+    marginBottom: Theme.spacing.xl,
   },
   input: {
     borderColor: Theme.colors.primary,
