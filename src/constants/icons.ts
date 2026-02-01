@@ -12,6 +12,7 @@ const AppIcon = {
   document: "file-document-outline",
   tournament: "trophy-outline",  
   event: "calendar-outline",
+  mail:"email",
   pass: "lock-closed-outline",  
   profile: "account",
    calender: "calendar",

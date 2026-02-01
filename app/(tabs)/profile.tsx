@@ -4,8 +4,7 @@ import { useDialog } from "@/context/DialogContext";
 import { useGlobalData } from "@/context/GlobalDataContext";
 import { useToast } from "@/context/ToastContext";
 import { easterEgg } from "@/lib/fun-animation";
-import { getPhoneNo, resetSecureStorageWithLogs, secureStorageGetItem } from "@/lib/storage";
-import { SECURE_STORE_KEYS } from "@/lib/storageKeys";
+import { getUserDetails, resetSecureStorageWithLogs } from "@/lib/storage";
 import { SettingItem } from "@/types/SettingItem";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -45,9 +44,9 @@ export default function ProfileScreen() {
   //   });
   // };
 
-  //  const handleDetails = () => { 
-  //  router.push(Route.DETAILS) ,  //route to details page
-  // };
+   const handleDetails = () => { 
+   router.push(Route.DETAILS) //route to details page
+  };
 
 //   const handleDetails = () => {
 //   router.push({
@@ -55,6 +54,7 @@ export default function ProfileScreen() {
 //     params: { fromTab: 'profile' },
 //   });
 // };
+
   const handleNamePress = () => {
     setDisplayName(easterEgg());
     // restore original name after delay
@@ -69,7 +69,7 @@ export default function ProfileScreen() {
       id: "1",
       title: "Personal Details",
       icon: Theme.icons.document,
-      // onPress: () => handleDetails(),
+      onPress: () => handleDetails(),
     },
   
     // {
@@ -88,10 +88,11 @@ export default function ProfileScreen() {
 
   useEffect(() => {
       const loadProfile = async () => {
-        const userDetail =  {
-          username : await secureStorageGetItem(SECURE_STORE_KEYS.USERNAME),
-          mobile : await getPhoneNo()
-        }
+        const userDetail =  await getUserDetails();
+        // {
+        //   username : await secureStorageGetItem(SECURE_STORE_KEYS.USERNAME),
+        //   mobile : await getPhoneNo()
+        // }
         console.log("user",userDetail);
         // const Profiledetails = await getPersonalDetails();  //load presonal details from storage and set in state
         setDetails(userDetail);                 
@@ -122,10 +123,10 @@ export default function ProfileScreen() {
         }
         <View style={styles.infoBlock}>
           <Text onPress={handleNamePress} style={styles.name}>
-            {details?.username}
+            {details?.name}
           </Text>
           <Text style={styles.phone}>
-            {details?.mobile}
+            {details?.phone}
             </Text>
         </View>
       </View>

@@ -11,7 +11,7 @@ import {
 import { SECURE_STORE_KEYS } from "@/lib/storageKeys";
 import { router } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 
 export default function LoginScreen() {
@@ -59,10 +59,16 @@ export default function LoginScreen() {
     }
   };
 
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={styles.root}>
+return (
+  <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.card}>
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>Login to continue</Text>
@@ -73,7 +79,6 @@ export default function LoginScreen() {
           value={username}
           activeOutlineColor={Theme.colors.primary}
           onChangeText={setUsername}
-          keyboardType="default"
           autoCapitalize="none"
           style={styles.input}
         />
@@ -94,30 +99,25 @@ export default function LoginScreen() {
           onPress={handleLogin}
           style={styles.button}
           disabled={isSubmitting}
-          contentStyle={{ paddingVertical: 6 }}>
+          contentStyle={{ paddingVertical: 6 }}
+        >
           Login
         </Button>
 
         <Button
           mode="contained"
-          onPress={() =>router.replace(Route.REGISTER)}
+          onPress={() => router.replace(Route.REGISTER)}
           style={styles.button}
           disabled={isSubmitting}
-          contentStyle={{ paddingVertical: 6 }}>
+          contentStyle={{ paddingVertical: 6 }}
+        >
           Register
         </Button>
-
-        {/* <Button
-          mode="contained"
-          onPress={secureStorageLogs}
-          style={styles.button}
-          disabled={isSubmitting}
-          contentStyle={{ paddingVertical: 6 }}>
-          Print Logs
-        </Button> */}
       </View>
-    </KeyboardAvoidingView>
-  );
+    </ScrollView>
+  </KeyboardAvoidingView>
+);
+
 }
 
 const styles = StyleSheet.create({
@@ -126,6 +126,11 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.surface,
     justifyContent: "center",
     paddingHorizontal: Theme.spacing.lg,
+  },
+   scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center", // keeps card centered when keyboard is closed
+    padding: 16,
   },
   card: {
     backgroundColor: "rgba(255, 255, 255, 0.15)",

@@ -10,7 +10,7 @@ import { isValidNumber } from "@/lib/utils";
 import { UserDetail } from "@/types/UserDetail";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 
 export default function RegisterScreen() {
@@ -123,127 +123,103 @@ const handleChange = (key: string, value: any) => {
 };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={styles.root}>
-      <View style={styles.card}>
-       
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subtitle}>Register to continue</Text> 
-        {/* <Image
-                source={require("assets/images/logo.png")}
-                style={styles.logo}
-                resizeMode="contain"/> */}
-        {/* {refNo && <Text style={styles.subtitle}>Reference No: {refNo}</Text>} */}
-        <TextInput
-          mode="outlined"
-          label="Full Name"
-          value={userDetails?.name}
-          activeOutlineColor={Theme.colors.primary}
-          onChangeText={(text) => handleChange("name",text)}
-          keyboardType="default"
-          autoCapitalize="none"
-          disabled={showOtp}
-          style={styles.input}
-        />
-        <TextInput
-          mode="outlined"
-          label="Phone Number"
-          value={userDetails?.mobile}
-          activeOutlineColor={Theme.colors.primary}
-          onChangeText={(text) => handleChange("mobile",text)}
-          keyboardType="number-pad"
-          autoCapitalize="none"
-          disabled={showOtp}
-          style={styles.input}
-        />
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.card}>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.subtitle}>Register to continue</Text>
 
-        <TextInput
-          mode="outlined"
-          label="Email"
-          value={userDetails?.email}
-          activeOutlineColor={Theme.colors.primary}
-          onChangeText={(text) => handleChange("email",text)}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          disabled={showOtp}
-          style={styles.input}
-        />
-
-        <TextInput
-          mode="outlined"
-          label="Master Password"
-          value={userDetails?.password}
-          activeOutlineColor={Theme.colors.primary}
-          onChangeText={(text) => handleChange("password",text)}
-          keyboardType="visible-password"
-          autoCapitalize="none"
-          disabled={showOtp}
-          style={styles.input}
-        />
-
-        <TextInput
-          mode="outlined"
-          label="Confirm Master Password"
-          value={userDetails?.confirmPassword}
-          activeOutlineColor={Theme.colors.primary}
-          onChangeText={(text) => handleChange("confirmPassword",text)}
-          keyboardType="visible-password"
-          autoCapitalize="none"
-          disabled={showOtp}
-          style={styles.input}
-        />
-
-        {/* {showOtp && (
           <TextInput
             mode="outlined"
-            label="Enter OTP"
+            label="Full Name"
+            value={userDetails?.name}
             activeOutlineColor={Theme.colors.primary}
-            value={otp}
-            onChangeText={setOtp}
-            keyboardType="number-pad"
+            onChangeText={(text) => handleChange("name", text)}
+            autoCapitalize="none"
+            disabled={showOtp}
             style={styles.input}
           />
-        )} */}
 
-        <Button
-          mode="contained"
-          // onPress={showOtp ? handleVerifyOtp : handleRegister}
-          onPress={handleRegister}
-          style={styles.button}
-          disabled={isSubmitting}
-          contentStyle={{ paddingVertical: 6 }}>
-          {/* {showOtp ? "Verify OTP" : "Register"} */}
-          {"Register"}
-        </Button>
+          <TextInput
+            mode="outlined"
+            label="Phone Number"
+            value={userDetails?.mobile}
+            activeOutlineColor={Theme.colors.primary}
+            onChangeText={(text) => handleChange("mobile", text)}
+            keyboardType="number-pad"
+            autoCapitalize="none"
+            disabled={showOtp}
+            style={styles.input}
+          />
 
-        <Button
-          mode="contained"
-          // onPress={showOtp ? handleVerifyOtp : handleRegister}
-          onPress={()=> router.replace(Route.LOGIN)}
-          style={styles.button}
-          disabled={isSubmitting}
-          contentStyle={{ paddingVertical: 6 }}>
-          {/* {showOtp ? "Verify OTP" : "Register"} */}
-          Login
-        </Button>
-        {/* { showOtp?
-        <Button
-          mode="contained"
-          onPress={handleChangeMobileNo}
-          style={styles.button}
-          disabled={isSubmitting}
-          contentStyle={{ paddingVertical: 6 }}>
-          {"Change Number"}
-        </Button>
-        :<></>
-} */}
-        {error && <AlertBox type={ALERT_TYPE.ERROR} message={error} />}
-      </View>
+          <TextInput
+            mode="outlined"
+            label="Email"
+            value={userDetails?.email}
+            activeOutlineColor={Theme.colors.primary}
+            onChangeText={(text) => handleChange("email", text)}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            disabled={showOtp}
+            style={styles.input}
+          />
+
+          <TextInput
+            mode="outlined"
+            label="Master Password"
+            value={userDetails?.password}
+            activeOutlineColor={Theme.colors.primary}
+            onChangeText={(text) => handleChange("password", text)}
+            secureTextEntry
+            disabled={showOtp}
+            style={styles.input}
+          />
+
+          <TextInput
+            mode="outlined"
+            label="Confirm Master Password"
+            value={userDetails?.confirmPassword}
+            activeOutlineColor={Theme.colors.primary}
+            onChangeText={(text) => handleChange("confirmPassword", text)}
+            secureTextEntry
+            disabled={showOtp}
+            style={styles.input}
+          />
+
+          <Button
+            mode="contained"
+            onPress={handleRegister}
+            style={styles.button}
+            disabled={isSubmitting}
+            contentStyle={{ paddingVertical: 6 }}
+          >
+            Register
+          </Button>
+
+          <Button
+            mode="contained"
+            onPress={() => router.replace(Route.LOGIN)}
+            style={styles.button}
+            disabled={isSubmitting}
+            contentStyle={{ paddingVertical: 6 }}
+          >
+            Login
+          </Button>
+
+          {error && <AlertBox type={ALERT_TYPE.ERROR} message={error} />}
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-  );
+  </TouchableWithoutFeedback>
+);
 }
 
 const styles = StyleSheet.create({
@@ -252,6 +228,11 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.surface,
     justifyContent: "center",
     paddingHorizontal: Theme.spacing.lg,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center", // centers card when keyboard is closed
+    padding: 16,
   },
   card: {
     backgroundColor: "rgba(255, 255, 255, 0.15)",

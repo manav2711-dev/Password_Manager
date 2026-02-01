@@ -5,7 +5,7 @@ export class Route {
     static LOGIN: Href = "/screens/login";
     static PROFILE :Href = "/(tabs)/profile";
     // static TOURNAMENT: Href = "/tournament";
-    // static DETAILS: Href = "/screens/details";
+    static DETAILS: Href = "/screens/details";
      static PASSWORDS: Href = "/(tabs)/passwords";
     //  static HOSPITALS: Href= "/screens/hospitals";
     //  static PATIENT_FORM : Href="/screens/patientDetails";
